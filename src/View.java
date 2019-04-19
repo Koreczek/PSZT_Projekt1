@@ -24,15 +24,22 @@ public class View extends JFrame{
 		draw(g);
 	}
 	private void draw(Graphics g) { 
+		g.clearRect(0,0,getWidth(),getHeight());
+		g.setColor(Color.red);
 		for(int index = 0; index < pointsFromFile.size(); index++) {
 			putPixel(g, pointsFromFile.get(index).getX(), pointsFromFile.get(index).getY() );
 		}
+		g.setColor(Color.black);
 		for(int index = 0; index < generetedPoints.size(); index++) {
 			putPixel(g, generetedPoints.get(index).getX(), generetedPoints.get(index).getY() );
 		}
+
 	}
 	private void putPixel(Graphics g, int x2, int y2) {
 		g.fillRect(x2,y2,1,1);	
 	}
+	public void setGeneretedPoints(List<Point> L) {
+		this.generetedPoints = L;
+		}
 	
 }
