@@ -1,27 +1,33 @@
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.Math;
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 
 public class Main{
-	static double[][] p1 = {{0.85, 0.04, -0.04, 0.85, 0, 1.6},{-0.15,0.28,0.26,0.24,0,0.44},{0.20,-0.26,0.23,0.22,0.5,1.6},{0,0,0,0.16,0,0}};
-	static double[][] p2 = {{0.85, 0.04, -0.04, 0.85, 0, 1.6},{-0.15,0.28,0.26,0.24,0,0.44},{0.20,-0.26,0.23,0.22,0.5,1.6},{0,0,0,0.16,0,0}};
+	static double[][] p1 = {{0.5, 0, 0, 0.5, 0, 0},{0.5,0,0,0.5,400,0},{0,-0.5,0.5,0,800,400}};
+	static double[][] p2 = {{0.5, 0, 0, 0.5, 0, 0},{0.5,0,0,0.5,800,0},{0.5,0,0,0.5,400,692}};
 	static List<Point> X = new ArrayList<>();
 	static List<Point> Y = new ArrayList<>();
+	static List<Point> F = new ArrayList<>();
 	static List<Point> Z = new ArrayList<>();
+	static int size = 800;
+	static int iterations = 10000;
 	
 	public static void main(String[] args) throws IOException{
-		RandomIterationAlgorithm RIA = new RandomIterationAlgorithm();
-		X = RIA.IFS(p1);
-		Y = RIA.IFS(p2);
-		marge(0.35);
-		System.out.println(Z.get(0).getX());
+		RandomIterationAlgorithm RIA1 = new RandomIterationAlgorithm(size, iterations, p1);
+		RandomIterationAlgorithm RIA2 = new RandomIterationAlgorithm(size, iterations, p2);
+		X = RIA1.IFS();
+		Y = RIA2.IFS();
+		marge(0.5);
+		Loadingf PointList = new Loadingf("png.png");
+		F = PointList.writetoList();
+		View view = new View(size, F, Z);
+		System.out.println(measureDistanceFromSetToSet(Z, F));
+		while(true) {
+			
+		}
+		
+		
+		
 	}
 	private static void marge(double a) {
 		Point p = new Point();
@@ -30,6 +36,7 @@ public class Main{
 		for(int i = 0; i<n;i++) {
 			x = (int) (a*X.get(i).getX() + (1-a)*Y.get(i).getX());
 			y = (int) (a*X.get(i).getY() + (1-a)*Y.get(i).getY());
+			p = new Point();
 			p.setPoint(x, y);
 			Z.add(p);
 		}
@@ -62,48 +69,6 @@ public class Main{
 		return m;
 		
 	}
-	private static int[][] convertTo2DWithoutUsingGetRGB(BufferedImage image) {
-		 
-        final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-        final int width = image.getWidth();
-        final int height = image.getHeight();
-        final boolean hasAlphaChannel = image.getAlphaRaster() != null;
- 
-        int[][] result = new int[height][width];
-        if (hasAlphaChannel) {
-            final int pixelLength = 4;
-            for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel += pixelLength) {
-                int argb = 0;
-                argb += (((int) pixels[pixel] & 0xff) << 24); // alpha
-                argb += ((int) pixels[pixel + 1] & 0xff); // blue
-                argb += (((int) pixels[pixel + 2] & 0xff) << 8); // green
-                argb += (((int) pixels[pixel + 3] & 0xff) << 16); // red
-                result[row][col] = argb;
-                col++;
-                if (col == width) {
-                    col = 0;
-                    row++;
-                }
-            }
-        } else {
-            final int pixelLength = 3;
-            for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel += pixelLength) {
-                int argb = 0;
-                argb += -16777216; // 255 alpha
-                argb += ((int) pixels[pixel] & 0xff); // blue
-                argb += (((int) pixels[pixel + 1] & 0xff) << 8); // green
-                argb += (((int) pixels[pixel + 2] & 0xff) << 16); // red
-                result[row][col] = argb;
-                col++;
-                if (col == width) {
-                    col = 0;
-                    row++;
-                }
-            }
-        }
- 
-        return result;
-    }
 	
 
 }

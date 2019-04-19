@@ -3,35 +3,37 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
  
 public class Loadingf {
- 
- 
- /*
-        public static void main(String[] args) throws IOException {
- 
-                BufferedImage hugeImage = ImageIO.read(new File("qwe.png"));
-                int[][] result = convertTo2DWithoutUsingGetRGB(hugeImage);
- 
- 
-                int ni = result.length;
-                int nj = result[0].length;
-            for (int i = 0; i < ni; i++) {
-                for (int j = 0; j <nj; j++) {
-                    if(result[i][j] != -1) {
-                        System.out.print("1");
-                    }else{
-                        System.out.print("0");
- 
-                    }
-                }
-                System.out.println();
-            }
+	
+	List<Point> Points = new ArrayList<>();
+	String path;
+	public Loadingf(String s) {
+		path = s;
+	}
+        
+
+    public List<Point> writetoList() throws IOException {
+    	BufferedImage hugeImage = ImageIO.read(new File(path));
+        int[][] result = convertTo2DWithoutUsingGetRGB(hugeImage);
+        Point P = new Point();
+        int ni = result.length;
+        int nj = result[0].length;
+        for (int i = 0; i < ni; i++) {
+        	for (int j = 0; j <nj; j++) {
+        		if(result[i][j] != -1) {
+        			P = new Point();
+        			P.setPoint(j, i);
+        			Points.add(P);
+        		}
+        	}
         }
- */
+        return Points;
+    }
  
- 
-    private static int[][] convertTo2DWithoutUsingGetRGB(BufferedImage image) {
+    private int[][] convertTo2DWithoutUsingGetRGB(BufferedImage image) {
  
         final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         final int width = image.getWidth();
